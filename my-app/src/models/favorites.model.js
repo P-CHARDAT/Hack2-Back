@@ -10,14 +10,14 @@ const findOneFavoritesById = (id) => {
   return connection.promise().query(sql, [id]);
 };
 
-const createOneFavorites = (project) => {
+const createOneFavorites = (favorite) => {
   const sql = "INSERT INTO favorites SET ?";
-  return connection.promise().query(sql, [project]);
+  return connection.promise().query(sql, [favorite]);
 };
 
-const updateOneFavorites = (project, id) => {
+const updateOneFavorites = (favorite, id) => {
   const sql = "UPDATE favorites SET ? WHERE id=?";
-  return connection.promise().query(sql, [project, id]);
+  return connection.promise().query(sql, [favorite, id]);
 };
 
 const deleteOneFavorites = (id) => {

@@ -25,6 +25,7 @@ const deleteOneVotes = (id) => {
   return connection.promise().query(sql, [id]);
 };
 
+
 module.exports = {
   findManyVotes,
   findOneVotesById,
