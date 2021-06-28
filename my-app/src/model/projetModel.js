@@ -25,13 +25,8 @@ const deleteOneProject = (id) => {
   return connection.promise().query(sql, [id]);
 };
 
-const findProjectByCategoryId = (id) => {
-    const sql =
-      'SELECT c.type, c.theme FROM category c JOIN project p ON c.id = p.category_id WHERE p.id = ?';
-    return connection.promise().query(sql, [id]);
-  };
 
-  const findProjectByCategoryId = (id) => {
+  const findFavoriteByCreatorId = (id) => {
     const sql =
       'SELECT p.creator_id FROM project p JOIN favorite f ON p.id = f.creator_id WHERE p.id = ?';
     return connection.promise().query(sql, [id]);
@@ -39,7 +34,7 @@ const findProjectByCategoryId = (id) => {
 
   const findVoteByProjectId = (id) => {
     const sql =
-      'SELECT p.id, p.description, p.asset_link, p.url_link, p.creator_id, p.category_id FROM project p JOIN vote v ON p.id = v.project_id WHERE v.id = ?';
+      'SELECT p.description, p.asset_link, p.url_link, p.creator_id, p.category_id FROM project p JOIN vote v ON p.id = v.project_id WHERE v.id = ?';
     return connection.promise().query(sql, [id]);
   };
 
@@ -55,8 +50,8 @@ module.exports = {
     createOneProject,
     updateOneProject,
     deleteOneProject,
-    findProjectByCategoryId,
     findVoteByProjectId,
+    findFavoriteByCreatorId,
    
 
 }
