@@ -1,4 +1,5 @@
 const connection = require('../db-connection');
+const argon2 = require('argon2');
 
 const findManyUser = () => {
   const sql = 'SELECT * FROM users';
@@ -60,13 +61,17 @@ const hashPassword = async (password) => {
 module.exports = {
     findOneUserById,
     createOneUser,
-    verifExistDataUser,
     existEmailUser,
     updateOneUser,
     deleteOneUser,
     hashPassword,
     verifyPassword,
     findFavoriteByUserId,
+<<<<<<< HEAD:my-app/src/model/userModel.js
     findVoteByUserId,
 
+=======
+    findManyUser,
+    findVoteByUserId,
+>>>>>>> dev:my-app/src/models/user.model.js
 }

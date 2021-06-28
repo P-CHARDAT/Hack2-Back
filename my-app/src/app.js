@@ -3,6 +3,8 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 
+const mainRouter = require('./routes/index');
+
 app.use(
   cors({
     origin: process.env.CLIENT_URL,
