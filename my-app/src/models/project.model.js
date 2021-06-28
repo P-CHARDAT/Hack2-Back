@@ -36,12 +36,7 @@ const deleteOneProject = (id) => {
     const sql =
       'SELECT p.description, p.asset_link, p.url_link, p.creator_id, p.category_id FROM project p JOIN vote v ON p.id = v.project_id WHERE v.id = ?';
     return connection.promise().query(sql, [id]);
-  };
-
-
-
-
-  
+  };  
 
 
 module.exports = {
@@ -52,6 +47,4 @@ module.exports = {
     deleteOneProject,
     findVoteByProjectId,
     findFavoriteByCreatorId,
-   
-
 }
