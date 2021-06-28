@@ -15,7 +15,7 @@ const createOneUser = (user) => {
   return connection.promise().query(sql, [user]);
 };
 
-const verifExistDataUser = (email,phone) => {
+const verifExistDataUser = (email) => {
   const sql = 'SELECT * FROM users WHERE email = ? ';
   return connection.promise().query(sql, [email]);
 };
