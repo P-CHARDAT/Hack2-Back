@@ -15,11 +15,6 @@ const createOneUser = (user) => {
   return connection.promise().query(sql, [user]);
 };
 
-const verifExistDataUser = (email) => {
-  const sql = 'SELECT * FROM users WHERE email = ? ';
-  return connection.promise().query(sql, [email]);
-};
-
 const existEmailUser = (email) => {
   const sql = 'SELECT * FROM users WHERE email = ?';
   return connection.promise().query(sql, [email]);
@@ -71,6 +66,7 @@ module.exports = {
     deleteOneUser,
     hashPassword,
     verifyPassword,
-    findFavoriteByUserId
+    findFavoriteByUserId,
+    findVoteByUserId,
 
 }
