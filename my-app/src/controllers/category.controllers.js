@@ -28,7 +28,7 @@ const getCategories = (req, res) => {
     });
 };
 
-const createOneCategory = (req, res, next) => {
+const createCategory = (req, res, next) => {
   const { type, theme } = req.body;
   let validationData = null;
   validationData = Joi.object({
@@ -57,5 +57,5 @@ const createOneCategory = (req, res, next) => {
 
 module.exports = {
   getCategories,
-  createOneCategory,
+  createCategory,
 };
