@@ -7,12 +7,40 @@ const {
   deleteOneProject,
   findVoteByProjectId,
   findFavoriteByCreatorId,
+  findAllProjectInfos,
+  findOneProjectInfosById,
 } = require("../models/project.model");
 
-const getProjects = (req, res) => {
-  const id = req.imagesId ? req.imagesId : req.params.id;
+const getProjectInfos = (req, res) => {
+  findAllProjectInfos()
+    .then((results) => {
+      const projectsInfos = results[0];
+      res.json(projectsInfos);
+    })
+    .catch((err) => {
+      res.status(500).send(err.message);
+    });
+};
+
+const getProjectInfosById = (req, res) => {
+  const id = req.projectId ? req.projectId : req.params.id;
   if (id) {
-    const status = req.imagesId ? 201 : 200;
+    const status = req.projectId ? 201 : 200;
+    return findOneProjectInfosById(id)
+      .then((results) => {
+        const projects = results[0];
+        res.status(status).json(projects[0]);
+      })
+      .catch((err) => {
+        res.status(500).send(err.message);
+      });
+  }
+};
+
+const getProjects = (req, res) => {
+  const id = req.projectId ? req.projectId : req.params.id;
+  if (id) {
+    const status = req.projectId ? 201 : 200;
     return findOneProjectById(id)
       .then((results) => {
         const projects = results[0];
@@ -32,7 +60,7 @@ const getProjects = (req, res) => {
     });
 };
 
-const createOneProject = (req, res, next) => {
+const createProject = (req, res, next) => {
   const { description, asset_link, url_link } = req.body;
   let validationData = null;
   validationData = Joi.object({
@@ -45,7 +73,7 @@ const createOneProject = (req, res, next) => {
   ).error;
   if (validationData) {
     console.log(validationData);
-    res.status(500).send("Invalide donné");
+    res.status(500).send("Data invalid");
   } else {
     createOneProject({ description, asset_link, url_link })
       .then(([results]) => {
@@ -58,8 +86,8 @@ const createOneProject = (req, res, next) => {
   }
 };
 
-const updateOneProject = (req, res, next) => {
-  const { src, alt, dimension } = req.body;
+const updateProject = (req, res, next) => {
+  const { description, asset_link, url_link } = req.body;
   let validationData = null;
   validationData = Joi.object({
     description: Joi.string(),
@@ -70,12 +98,12 @@ const updateOneProject = (req, res, next) => {
     { abortEarly: false }
   ).error;
   if (validationData) {
-    res.status(500).send("Invalide donné");
+    res.status(500).send("Data invalid");
   } else {
     updateOneProject(req.body, req.params.id)
       .then(([results]) => {
         if (results.affectedRows === 0) {
-          res.status(404).send("Cette image n'existe pas.");
+          res.status(404).send(`This project doesn't exist`);
         } else {
           next();
         }
@@ -88,6 +116,8 @@ const updateOneProject = (req, res, next) => {
 
 module.exports = {
   getProjects,
-  createOneProject,
-  updateOneProject,
+  createProject,
+  updateProject,
+  getProjectInfos,
+  getProjectInfosById,
 };
