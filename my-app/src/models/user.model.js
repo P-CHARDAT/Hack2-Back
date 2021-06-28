@@ -67,11 +67,6 @@ module.exports = {
     hashPassword,
     verifyPassword,
     findFavoriteByUserId,
-<<<<<<< HEAD:my-app/src/model/userModel.js
-    findVoteByUserId,
-
-=======
     findManyUser,
     findVoteByUserId,
->>>>>>> dev:my-app/src/models/user.model.js
 }
