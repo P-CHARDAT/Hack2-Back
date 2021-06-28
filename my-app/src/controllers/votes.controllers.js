@@ -54,8 +54,22 @@ const updateVotes = (req, res, next) => {
     });
 };
 
+const deleteVotes = (req, res) => {
+  deleteOneVotes(req.params.id)
+    .then(([results]) => {
+      if (results.affetedRows === 0) {
+        return res.status(404).send("Votes not found");
+      }
+      return res.sendStatus(204);
+    })
+    .catch((err) => {
+      res.status(500).send(err.message);
+    });
+};
+
 module.exports = {
   getVotes,
   createVotes,
   updateVotes,
+  deleteVotes,
 };
