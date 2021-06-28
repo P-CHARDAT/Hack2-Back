@@ -14,11 +14,12 @@ const {
 const getProjectInfos = (req, res) => {
   findAllProjectInfos()
     .then((results) => {
-      const projectsInfos = results[0];
-      res.json(projectsInfos);
+      console.log(results);
+      const projectsInfos = results;
+      return res.json(projectsInfos);
     })
     .catch((err) => {
-      res.status(500).send(err.message);
+      return res.status(500).send(err.message);
     });
 };
 
@@ -61,21 +62,23 @@ const getProjects = (req, res) => {
 };
 
 const createProject = (req, res, next) => {
-  const { description, asset_link, url_link } = req.body;
+  const { description, asset_link, url_link, creator_id, category_id } = req.body;
   let validationData = null;
   validationData = Joi.object({
     description: Joi.string(),
     asset_link: Joi.string(),
     url_link: Joi.string(),
+    creator_id: Joi.number().integer(),
+    category_id: Joi.number().integer(),
   }).validate(
-    { description, asset_link, url_link },
+    { description, asset_link, url_link, creator_id, category_id },
     { abortEarly: false }
   ).error;
   if (validationData) {
     console.log(validationData);
     res.status(500).send("Data invalid");
   } else {
-    createOneProject({ description, asset_link, url_link })
+    createOneProject({ description, asset_link, url_link, creator_id, category_id })
       .then(([results]) => {
         req.projectId = results.insertId;
         next();
@@ -87,14 +90,16 @@ const createProject = (req, res, next) => {
 };
 
 const updateProject = (req, res, next) => {
-  const { description, asset_link, url_link } = req.body;
+  const { description, asset_link, url_link, creator_id, category_id } = req.body;
   let validationData = null;
   validationData = Joi.object({
     description: Joi.string(),
     asset_link: Joi.string(),
     url_link: Joi.string(),
+    creator_id: Joi.number().integer(),
+    category_id: Joi.number().integer(),
   }).validate(
-    { description, asset_link, url_link },
+    { description, asset_link, url_link, creator_id, category_id },
     { abortEarly: false }
   ).error;
   if (validationData) {

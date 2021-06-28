@@ -10,7 +10,7 @@ const {
 
 projectRoutes.get("/", getProjects);
 projectRoutes.get("/:id", getProjects);
-projectRoutes.get("/infos/", getProjectInfos);
+projectRoutes.get("/infos", getProjectInfos);
 projectRoutes.get("/infos/:id", getProjectInfosById);
 projectRoutes.post("/", createProject, getProjects);
 projectRoutes.put("/:id", updateProject, getProjects);
