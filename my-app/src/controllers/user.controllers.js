@@ -3,8 +3,6 @@ const Joi = require('joi');
 const {
   findAllClient,
   findOneById,
-  findOneByFirstname,
-  findOneByLastname,
   createOne,
   updateOne,
   deleteOne,
