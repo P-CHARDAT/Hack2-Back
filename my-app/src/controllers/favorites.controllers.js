@@ -3,8 +3,8 @@ const {
   findOneFavoritesById,
   createOneFavorites,
   updateOneFavorites,
-  // deleteOneFavorites,
-  // findAllFavoritesInfos,
+  deleteOneFavorites,
+  deleteOneFavorites,
 } = require("../models/favorites.model");
 
 const getFavorites = (req, res) => {
@@ -55,8 +55,23 @@ const updateFavorites = (req, res, next) => {
     });
 };
 
+
+const deleteFavorites = (req, res) => {
+  deleteOneFavorites(req.params.id)
+    .then(([results]) => {
+      if (results.affetedRows === 0) {
+        return res.status(404).send("Favorites not found");
+      }
+      return res.sendStatus(204);
+    })
+    .catch((err) => {
+      res.status(500).send(err.message);
+    });
+};
+
 module.exports = {
   getFavorites,
   createFavorites,
   updateFavorites,
+  deleteFavorites,
 };

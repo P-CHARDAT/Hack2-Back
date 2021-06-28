@@ -25,17 +25,10 @@ const deleteOneFavorites = (id) => {
   return connection.promise().query(sql, [id]);
 };
 
-// à compléter
-const findAllFavoritesInfos = () => {
-  const sql = "";
-  return connection.promise().query(sql);
-};
-
 module.exports = {
   findManyFavorites,
   findOneFavoritesById,
   createOneFavorites,
   updateOneFavorites,
   deleteOneFavorites,
-  findAllFavoritesInfos,
 };

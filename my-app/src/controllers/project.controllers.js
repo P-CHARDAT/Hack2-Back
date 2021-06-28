@@ -114,10 +114,24 @@ const updateProject = (req, res, next) => {
   }
 };
 
+const deleteProject = (req, res) => {
+  deleteOneProject(req.params.id)
+    .then(([results]) => {
+      if (results.affetedRows === 0) {
+        return res.status(404).send("Project not found");
+      }
+      return res.sendStatus(204);
+    })
+    .catch((err) => {
+      res.status(500).send(err.message);
+    });
+};
+
 module.exports = {
   getProjects,
   createProject,
   updateProject,
   getProjectInfos,
   getProjectInfosById,
+  deleteProject,
 };
