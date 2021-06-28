@@ -1,14 +1,15 @@
 const Joi = require('joi');
 
 const {
-  findAllClient,
-  findOneById,
-  createOne,
-  updateOne,
-  deleteOne,
-  verifyEmail,
-  verifyPassword,
-  hashPassword,
+    findOneUserById,
+    findFavoriteByUserId
+    createOneUser,
+    verifExistDataUser,
+    existEmailUser,
+    updateOneUser,
+    deleteOneUser,
+    hashPassword,
+    verifyPassword,
 } = require('../models/user.model');
 
 

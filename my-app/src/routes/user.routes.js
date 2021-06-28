@@ -9,7 +9,6 @@ const {
 } = require('../controllers/user.controllers');
 
 userRouter.get('/', getClients);
-// authenticateToken placé avant le getClients de la ligne suivante dans mes premiers tests
 userRouter.get('/:id', getClients);
 userRouter.post('/', createOneClient, getClients);
 userRouter.put('/:id', updateOneClient, getClients);
