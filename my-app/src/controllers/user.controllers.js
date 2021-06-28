@@ -1,14 +1,16 @@
 const Joi = require('joi');
 
 const {
-  findAllClient,
-  findOneById,
-  createOne,
-  updateOne,
-  deleteOne,
-  verifyEmail,
-  verifyPassword,
-  hashPassword,
+    findOneUserById,
+    createOneUser,
+    existEmailUser,
+    updateOneUser,
+    deleteOneUser,
+    hashPassword,
+    verifyPassword,
+    // findFavoriteByUserId,
+    findManyUser,
+    // findVoteByUserId,
 } = require('../models/user.model');
 
 
@@ -26,20 +28,20 @@ async function awesomeDataHandler(promise) {
   const getClients = async (req, res) => {
     const id = req.clientId ? req.clientId : req.params.id;
     if (id) {
-      const [data, error] = await awesomeDataHandler(findOneById(id));
+      const [data, error] = await awesomeDataHandler(findOneUserById(id));
       if (data) {
         return data[0].length ? res.json(data[0][0]) : res.status(404).send('User not found');
       }
       return res.status(500).send(error.message);
     }
-    const [data, error] = await awesomeDataHandler(findAllClient());
+    const [data, error] = await awesomeDataHandler(findManyUser());
     return data ? res.json(data[0]) : res.status(500).send(error.message);
   };
 
 
   const createOneClient = async (req, res, next) => {
     const { firstname, lastname, email, password, phone, adress, role } = req.body;
-    const [data, error] = await awesomeDataHandler(verifyEmail(email));
+    const [data, error] = await awesomeDataHandler(existEmailUser(email));
     if (data[0][0]) {
       res.status(500).send('Ce client existe déja');
     } else {
@@ -60,7 +62,7 @@ async function awesomeDataHandler(promise) {
       } else {
         const hashedPassword = await hashPassword(password);
         const user = { firstname, lastname, email, hashedPassword, phone, adress, role };
-        const [data1, error1] = await awesomeDataHandler(createOne(user));
+        const [data1, error1] = await awesomeDataHandler(createOneUser(user));
         if (!error) {
           req.clientId = [data1].insertId;
           next(req.clientId);
@@ -71,7 +73,7 @@ async function awesomeDataHandler(promise) {
   
   const updateOneClient = (req, res, next) => {
     const { firstname, lastname, email, hashedPassword, phone, adress } = req.body;
-    verifyEmail(email).then(async ([result]) => {
+    existEmailUser(email).then(async ([result]) => {
       if (result[0]) {
         res.status(500).send('Ce client existe déja');
       } else {
@@ -90,7 +92,7 @@ async function awesomeDataHandler(promise) {
           if (req.body.hashedPassword) {
             req.body.hashedPassword = await hashPassword(hashedPassword);
           }
-          updateOne(req.body, req.params.id)
+          updateOneUser(req.body, req.params.id)
             .then(([results]) => {
               if (results.affectedRows === 0) {
                 return res.status(404).send('Client not found');
@@ -109,7 +111,7 @@ async function awesomeDataHandler(promise) {
     console.log(req.body);
     const { email, password } = req.body;
     try {
-      const [users] = await verifyEmail(email);
+      const [users] = await existEmailUser(email);
       console.log(users);
       if (!users) {
         return res.status(404).send('User not found');
@@ -128,7 +130,7 @@ async function awesomeDataHandler(promise) {
   };
   
   const deleteOneClient = (req, res) => {
-    deleteOne(req.params.id)
+    deleteOneUser(req.params.id)
       .then(([results]) => {
         if (results.affetedRows === 0) {
           return res.status(404).send('Client not found');
