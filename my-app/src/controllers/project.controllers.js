@@ -60,7 +60,7 @@ const getProjects = (req, res) => {
     });
 };
 
-const createOneProject = (req, res, next) => {
+const createProject = (req, res, next) => {
   const { description, asset_link, url_link } = req.body;
   let validationData = null;
   validationData = Joi.object({
@@ -86,7 +86,7 @@ const createOneProject = (req, res, next) => {
   }
 };
 
-const updateOneProject = (req, res, next) => {
+const updateProject = (req, res, next) => {
   const { description, asset_link, url_link } = req.body;
   let validationData = null;
   validationData = Joi.object({
@@ -116,8 +116,8 @@ const updateOneProject = (req, res, next) => {
 
 module.exports = {
   getProjects,
-  createOneProject,
-  updateOneProject,
+  createProject,
+  updateProject,
   getProjectInfos,
   getProjectInfosById,
 };
