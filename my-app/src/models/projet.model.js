@@ -50,13 +50,6 @@ const deleteOneProject = (id) => {
     return connection.promise().query(sql,[id]);
   };
 
-
-
-
-
-  
-
-
 module.exports = {
     findManyProject,
     findOneProjectById,
@@ -65,6 +58,6 @@ module.exports = {
     deleteOneProject,
     findVoteByProjectId,
     findFavoriteByCreatorId,
-   
-
+    findAllProjectInfos,
+    findOneProjectInfosById,
 }
