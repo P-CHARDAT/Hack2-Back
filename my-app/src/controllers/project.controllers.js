@@ -14,8 +14,7 @@ const {
 const getProjectInfos = (req, res) => {
   findAllProjectInfos()
     .then((results) => {
-      console.log(results);
-      const projectsInfos = results;
+      const projectsInfos = results[0];
       return res.json(projectsInfos);
     })
     .catch((err) => {
