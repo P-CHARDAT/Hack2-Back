@@ -10,8 +10,8 @@ const {
 } = require("../controllers/project.controllers");
 
 projectRoutes.get("/", getProjects);
+projectRoutes.get("/infos", getProjectInfos);
 projectRoutes.get("/:id", getProjects);
-projectRoutes.get("/infos/", getProjectInfos);
 projectRoutes.get("/infos/:id", getProjectInfosById);
 projectRoutes.post("/", createProject, getProjects);
 projectRoutes.put("/:id", updateProject, getProjects);
