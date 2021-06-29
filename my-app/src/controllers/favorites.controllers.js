@@ -4,7 +4,6 @@ const {
   createOneFavorites,
   updateOneFavorites,
   deleteOneFavorites,
-  deleteOneFavorites,
 } = require("../models/favorites.model");
 
 const getFavorites = (req, res) => {
