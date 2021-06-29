@@ -90,43 +90,6 @@ const createOneClient = async (req, res, next) => {
   }
 };
 
-  const createOneClient = async (req, res, next) => {
-    const { pseudo, email, clearPassword } = req.body;
-    const [data, error] = await awesomeDataHandler(existEmailUser(email));
-    if (data[0][0]) {
-      res.status(500).send('This user is already used');
-    } else {
-      let validationData = null;
-      validationData = Joi.object({
-        pseudo: Joi.string().alphanum(),
-        email: Joi.string()
-          .email({ minDomainSegments: 2, tlds: { alow: ['com', 'fr', 'net'] } })
-          .required(),
-        clearPassword: Joi.string().pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[.;!@#$%^&*])(?=.{8,})')).min(8).max(32).required(),
-      }).validate({ pseudo, email, clearPassword }, { abortEarly: false }).error;
-      if (validationData) {
-        res.status(500).send(`${[validationData]} invalid data`);
-      } else {
-        const hashedPassword = await hashPassword(clearPassword);
-        const user = { pseudo, email, password: hashedPassword };
-        const [data1, error1] = await awesomeDataHandler(createOneUser(user));
-        if (!error) {
-          req.clientId = [data1].insertId;
-          next(req.clientId);
-        }
-        updateOneUser(req.body, req.params.id)
-          .then(([results]) => {
-            if (results.affectedRows === 0) {
-              return res.status(404).send("User not found");
-            }
-            return next();
-          })
-          .catch((err) => {
-            res.status(500).send(err.message);
-          });
-      }
-    }
-  };
   
   const updateOneClient = (req, res, next) => {
     const { pseudo, email, password } = req.body;
