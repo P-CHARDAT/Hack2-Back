@@ -39,7 +39,7 @@ const findVoteByProjectId = (id) => {
 
 const findAllProjectInfos = () => {
   const sql =
-    "SELECT p.id, p.description, p.asset_link, p.url_link, u.email, c.type FROM project p LEFT JOIN votes v ON p.id = v.project_id JOIN category c ON c.id = p.category_id JOIN user u ON u.id = p.creator_id";
+    "SELECT p.id, p.description, p.asset_link, p.url_link, u.pseudo, c.type FROM project p LEFT JOIN votes v ON p.id = v.project_id JOIN category c ON c.id = p.category_id JOIN user u ON u.id = p.creator_id";
   return connection.promise().query(sql);
 };
 
