@@ -17,10 +17,10 @@ const getProjectInfos = (req, res) => {
   findAllProjectInfos()
     .then((results) => {
       const projectsInfos = results[0];
-      res.json(projectsInfos);
+      return res.json(projectsInfos);
     })
     .catch((err) => {
-      res.status(500).send(err.message);
+      return res.status(500).send(err.message);
     });
 };
 
@@ -75,41 +75,42 @@ const createAssestProject = (req, res, next) => {
   });
 
   const upload = multer({ storage: storage }).single("file");
-  // let validationData = null;
-  // validationData = Joi.object({
-  //   description: Joi.string(),
-  //   asset_link: Joi.string(),
-  //   url_link: Joi.string(),
-  //   creator_id: Joi.number(),
-  //   category_id: Joi.number(),
-  // }).validate(
-  //   { description, asset_link, url_link },
-  //   { abortEarly: false }
-  // ).error;
-  // if (validationData) {
-  //   console.log(validationData);
-  //   res.status(500).send("Invalide donné");
-  // } else {
   upload(req, res, (err) => {
     if (err) {
       res.status(500).json(err);
     } else {
-      console.log(req.file.filename);
-      console.log(req.body.configuration);
-      const configuration = JSON.parse(req.body.configuration);
-      console.log(configuration);
-      req.project = {
-        asset_link: req.file.filename,
-        ...configuration,
-      };
-      console.log(req.project);
-      createOneProject(req.project).then((result) => {
-        req.projectId = result[0].insertId;
-        next();
-      });
+      let validationData = null;
+      validationData = Joi.object({
+        description: Joi.string(),
+        asset_link: Joi.string(),
+        url_link: Joi.string(),
+        creator_id: Joi.number().integer(),
+        category_id: Joi.number().integer(),
+      }).validate(
+        { description, asset_link, url_link },
+        { abortEarly: false }
+      ).error;
+
+      if (validationData) {
+        console.log(validationData);
+        res.status(500).send("Invalide donné");
+      } else {
+        console.log(req.file.filename);
+        console.log(req.body.configuration);
+        const configuration = JSON.parse(req.body.configuration);
+        console.log(configuration);
+        req.project = {
+          asset_link: req.file.filename,
+          ...configuration,
+        };
+        console.log(req.project);
+        createOneProject(req.project).then((result) => {
+          req.projectId = result[0].insertId;
+          next();
+        });
+      }
     }
   });
-  // }
 };
 
 const updateAssestProject = (req, res) => {
@@ -124,32 +125,33 @@ const updateAssestProject = (req, res) => {
   });
 
   const upload = multer({ storage: storage }).single("file");
-  let validationData = null;
-  validationData = Joi.object({
-    description: Joi.string(),
-    asset_link: Joi.string(),
-    url_link: Joi.string(),
-  }).validate(
-    { description, asset_link, url_link },
-    { abortEarly: false }
-  ).error;
+  
+  upload(req, res, (err) => {
+    if (err) {
+      res.status(500).json(err);
+    } else {
+      let validationData = null;
+      validationData = Joi.object({
+        description: Joi.string(),
+        asset_link: Joi.string(),
+        url_link: Joi.string(),
+        creator_id: Joi.number().integer(),
+        category_id: Joi.number().integer(),
+      }).validate(
+        { description, asset_link, url_link, creator_id, category_id },
+        { abortEarly: false }
+      ).error;
 
-  if (validationData) {
-    res.status(500).send("Invalide donné");
-  } else {
-    upload(req, res, (err) => {
-      if (err) {
-        res.status(500).json(err);
+      if (validationData) {
+        res.status(500).send("Invalide donné");
       } else {
+        const configuration = JSON.parse(req.body.configuration);
+        req.project = {
+          asset_link: req.file.filename,
+          ...configuration,
+        };
         console.log(req.file.filename);
-        updateOneProject(
-          {
-            description: req.body.description,
-            asset_link: req.file.filename,
-            url_link: req.body.url_link,
-          },
-          req.params.id
-        ).then(([result]) => {
+        updateOneProject(req.project, req.params.id).then(([result]) => {
           if (result.affectedRows === 0) {
             res.send("updtate fail");
           } else {
@@ -157,8 +159,8 @@ const updateAssestProject = (req, res) => {
           }
         });
       }
-    });
-  }
+    }
+  });
 };
 
 const deleteProject = (req, res) => {
