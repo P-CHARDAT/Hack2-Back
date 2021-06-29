@@ -1,5 +1,5 @@
-const connection = require('../db-connection');
-const argon2 = require('argon2');
+const connection = require("../db-connection");
+const argon2 = require("argon2");
 
 const findManyUser = () => {
   const sql = 'SELECT * FROM user';
@@ -32,41 +32,36 @@ const deleteOneUser = (id) => {
 };
 
 const hashPassword = async (password) => {
-    return await argon2.hash(password);
-  };
-  
-  const verifyPassword = async (password, hashedPassword) => {
-    return await argon2.verify(hashedPassword, password);
-  };
+  return await argon2.hash(password);
+};
 
+const verifyPassword = async (password, hashedPassword) => {
+  return await argon2.verify(hashedPassword, password);
+};
 
-  const findFavoriteByUserId = (id) => {
-    const sql =
-      'SELECT u.pseudo, u.mail, u.mdp FROM user u JOIN favorite f ON u.id = f.user_id WHERE f.id = ?';
-    return connection.promise().query(sql, [id]);
-  };
+const findFavoriteByUserId = (id) => {
+  const sql =
+    "SELECT u.pseudo, u.mail, u.mdp FROM user u JOIN favorite f ON u.id = f.user_id WHERE f.id = ?";
+  return connection.promise().query(sql, [id]);
+};
 
-  const findVoteByUserId = (id) => {
-    const sql =
-      'SELECT u.pseudo, u.mail, u.mdp FROM user u JOIN votes v ON u.id = v.user_id WHERE v.id = ?';
-    return connection.promise().query(sql, [id]);
-  };
-
-
-
-
+const findVoteByUserId = (id) => {
+  const sql =
+    "SELECT u.pseudo, u.mail, u.mdp FROM user u JOIN votes v ON u.id = v.user_id WHERE v.id = ?";
+  return connection.promise().query(sql, [id]);
+};
 
 // Hash password
 
 module.exports = {
-    findOneUserById,
-    createOneUser,
-    existEmailUser,
-    updateOneUser,
-    deleteOneUser,
-    hashPassword,
-    verifyPassword,
-    findFavoriteByUserId,
-    findManyUser,
-    findVoteByUserId,
-}
+  findOneUserById,
+  createOneUser,
+  existEmailUser,
+  updateOneUser,
+  deleteOneUser,
+  hashPassword,
+  verifyPassword,
+  findFavoriteByUserId,
+  findManyUser,
+  findVoteByUserId,
+};

@@ -3,6 +3,7 @@ const {
   findManyCategory,
   findOneCategoryById,
   createOneCategory,
+  deleteOnecategory,
 } = require("../models/category.model");
 
 const getCategories = (req, res) => {
@@ -34,10 +35,7 @@ const createCategory = (req, res, next) => {
   validationData = Joi.object({
     type: Joi.string(),
     theme: Joi.string(),
-  }).validate(
-    { type, theme },
-    { abortEarly: false }
-  ).error;
+  }).validate({ type, theme }, { abortEarly: false }).error;
   if (validationData) {
     console.log(validationData);
     res.status(500).send("Invalid data");
@@ -53,9 +51,21 @@ const createCategory = (req, res, next) => {
   }
 };
 
-
+const deleteCategory = (req, res) => {
+  deleteOnecategory(req.params.id)
+    .then(([results]) => {
+      if (results.affetedRows === 0) {
+        return res.status(404).send("Category not found");
+      }
+      return res.sendStatus(204);
+    })
+    .catch((err) => {
+      res.status(500).send(err.message);
+    });
+};
 
 module.exports = {
   getCategories,
   createCategory,
+  deleteCategory,
 };

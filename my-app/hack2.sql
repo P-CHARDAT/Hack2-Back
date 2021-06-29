@@ -54,7 +54,11 @@ CREATE TABLE `favorites` (
   KEY `fk_favorites_user` (`user_id`),
   KEY `fk_favorites_creator` (`creator_id`),
   CONSTRAINT `fk_favorites_creator` FOREIGN KEY (`creator_id`) REFERENCES `project` (`creator_id`) ON DELETE CASCADE,
+<<<<<<< HEAD
   CONSTRAINT `fk_favorites_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)  ON DELETE CASCADE
+=======
+  CONSTRAINT `fk_favorites_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE
+>>>>>>> dev
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -84,7 +88,11 @@ CREATE TABLE `project` (
   PRIMARY KEY (`id`),
   KEY `fk_project_creator` (`creator_id`),
   KEY `fk_project_category` (`category_id`),
+<<<<<<< HEAD
   CONSTRAINT `fk_project_category` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`)  ON DELETE CASCADE,
+=======
+  CONSTRAINT `fk_project_category` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`) ON DELETE CASCADE,
+>>>>>>> dev
   CONSTRAINT `fk_project_creator` FOREIGN KEY (`creator_id`) REFERENCES `user` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
