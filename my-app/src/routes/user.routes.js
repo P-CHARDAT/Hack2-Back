@@ -11,6 +11,7 @@ const {
 userRouter.get('/', getClients);
 userRouter.get('/:id', getClients);
 userRouter.post('/', createOneClient, getClients);
+userRouter.post('/login', verifyCredentials);
 userRouter.put('/:id', updateOneClient, getClients);
 userRouter.delete('/:id', deleteOneClient);
 
