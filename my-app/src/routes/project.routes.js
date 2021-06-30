@@ -2,19 +2,21 @@ const projectRoutes = require("express").Router();
 
 const {
   getProjects,
-  createProject,
-  updateProject,
-  getProjectInfos,
-  getProjectInfosById,
+  updateAssestProject,
+  createAssestProject,
   deleteProject,
+  getProjectInfos,
+  getProjectInfosById
 } = require("../controllers/project.controllers");
 
 projectRoutes.get("/", getProjects);
-projectRoutes.get("/infos", getProjectInfos);
-projectRoutes.get("/:id", getProjects);
+projectRoutes.get("/infos/", getProjectInfos);
 projectRoutes.get("/infos/:id", getProjectInfosById);
-projectRoutes.post("/", createProject, getProjects);
-projectRoutes.put("/:id", updateProject, getProjects);
+projectRoutes.get("/:id", getProjects);
+projectRoutes.post("/", createAssestProject, getProjects);
+
+projectRoutes.put("/:id", updateAssestProject, getProjects);
 projectRoutes.delete("/:id", deleteProject);
+
 
 module.exports = projectRoutes;

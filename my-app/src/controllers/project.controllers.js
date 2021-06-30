@@ -1,4 +1,6 @@
+const { json } = require("express");
 const Joi = require("joi");
+const multer = require("multer");
 const {
   findManyProject,
   findOneProjectById,
@@ -60,62 +62,105 @@ const getProjects = (req, res) => {
     });
 };
 
-const createProject = (req, res, next) => {
-  const { description, asset_link, url_link, creator_id, category_id } = req.body;
-  let validationData = null;
-  validationData = Joi.object({
-    description: Joi.string(),
-    asset_link: Joi.string(),
-    url_link: Joi.string(),
-    creator_id: Joi.number().integer(),
-    category_id: Joi.number().integer(),
-  }).validate(
-    { description, asset_link, url_link, creator_id, category_id },
-    { abortEarly: false }
-  ).error;
-  if (validationData) {
-    console.log(validationData);
-    res.status(500).send("Data invalid");
-  } else {
-    createOneProject({ description, asset_link, url_link, creator_id, category_id })
-      .then(([results]) => {
-        req.projectId = results.insertId;
-        next();
-      })
-      .catch((err) => {
-        res.status(500).send(err.message);
-      });
-  }
+const createAssestProject = (req, res, next) => {
+  const { description, asset_link, url_link, creator_id, category_id } =
+    req.body;
+  const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, "public/asset_link");
+    },
+    filename: (_, file, cb) => {
+      cb(null, `${Date.now()}-${file.originalname}`);
+    },
+  });
+
+  const upload = multer({ storage: storage }).single("file");
+  upload(req, res, (err) => {
+    if (err) {
+      res.status(500).json(err);
+    } else {
+      let validationData = null;
+      validationData = Joi.object({
+        description: Joi.string(),
+        asset_link: Joi.string(),
+        url_link: Joi.string(),
+        creator_id: Joi.number().integer(),
+        category_id: Joi.number().integer(),
+      }).validate(
+        { description, asset_link, url_link },
+        { abortEarly: false }
+      ).error;
+
+      if (validationData) {
+        console.log(validationData);
+        res.status(500).send("Invalide donné");
+      } else {
+        console.log(req.file.filename);
+        console.log(req.body.configuration);
+        const configuration = JSON.parse(req.body.configuration);
+        console.log(configuration);
+        req.project = {
+          asset_link: req.file.filename,
+          ...configuration,
+        };
+        console.log(req.project);
+        createOneProject(req.project).then((result) => {
+          req.projectId = result[0].insertId;
+          next();
+        });
+      }
+    }
+  });
 };
 
-const updateProject = (req, res, next) => {
-  const { description, asset_link, url_link, creator_id, category_id } = req.body;
-  let validationData = null;
-  validationData = Joi.object({
-    description: Joi.string(),
-    asset_link: Joi.string(),
-    url_link: Joi.string(),
-    creator_id: Joi.number().integer(),
-    category_id: Joi.number().integer(),
-  }).validate(
-    { description, asset_link, url_link, creator_id, category_id },
-    { abortEarly: false }
-  ).error;
-  if (validationData) {
-    res.status(500).send("Data invalid");
-  } else {
-    updateOneProject(req.body, req.params.id)
-      .then(([results]) => {
-        if (results.affectedRows === 0) {
-          res.status(404).send(`This project doesn't exist`);
-        } else {
-          next();
-        }
-      })
-      .catch((err) => {
-        res.status(500).send(err.message);
-      });
-  }
+const updateAssestProject = (req, res) => {
+  const { description, asset_link, url_link } = req.body;
+  const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, "public/asset_link");
+    },
+    filename: (_, file, cb) => {
+      cb(null, `${Date.now()}-${file.originalname}`);
+    },
+  });
+
+  const upload = multer({ storage: storage }).single("file");
+  
+  upload(req, res, (err) => {
+    if (err) {
+      res.status(500).json(err);
+    } else {
+      let validationData = null;
+      validationData = Joi.object({
+        description: Joi.string(),
+        asset_link: Joi.string(),
+        url_link: Joi.string(),
+        creator_id: Joi.number().integer(),
+        category_id: Joi.number().integer(),
+      }).validate(
+        { description, asset_link, url_link, creator_id, category_id },
+        { abortEarly: false }
+      ).error;
+
+      if (validationData) {
+        res.status(500).send("Invalide donné");
+      } else {
+        const configuration = JSON.parse(req.body.configuration);
+        req.project = {
+          asset_link: req.file.filename,
+          ...configuration,
+        };
+        console.log(req.file.filename);
+        updateOneProject(req.project, req.params.id).then(([result]) => {
+          if (result.affectedRows === 0) {
+            res.send("updtate fail");
+          } else {
+            res.status(204).end();
+          }
+        });
+      }
+    }
+  });
 };
 
 const deleteProject = (req, res) => {
@@ -133,9 +178,9 @@ const deleteProject = (req, res) => {
 
 module.exports = {
   getProjects,
-  createProject,
-  updateProject,
+  updateAssestProject,
+  createAssestProject,
+  deleteProject,
   getProjectInfos,
   getProjectInfosById,
-  deleteProject,
 };

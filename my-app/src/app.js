@@ -11,6 +11,7 @@ app.use(
     credentials: true,
   })
 );
+app.use("/asset_link", express.static("public/asset_link"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -18,6 +19,6 @@ app.get("/", (req, res) => {
   res.status(200).json({ foo: "hello" });
 });
 
-app.use('/api', mainRouter);
+app.use("/api", mainRouter);
 
 module.exports = app;

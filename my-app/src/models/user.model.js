@@ -2,32 +2,32 @@ const connection = require("../db-connection");
 const argon2 = require("argon2");
 
 const findManyUser = () => {
-  const sql = 'SELECT * FROM user';
+  const sql = "SELECT * FROM user";
   return connection.promise().query(sql);
 };
 
 const findOneUserById = (id) => {
-  const sql = 'SELECT * FROM user WHERE id=?';
+  const sql = "SELECT * FROM user WHERE id=?";
   return connection.promise().query(sql, [id]);
 };
 
 const createOneUser = (user) => {
-  const sql = 'INSERT INTO user SET ?';
+  const sql = "INSERT INTO user SET ?";
   return connection.promise().query(sql, [user]);
 };
 
 const existEmailUser = (email) => {
-  const sql = 'SELECT * FROM user WHERE email = ?';
+  const sql = "SELECT * FROM user WHERE email = ?";
   return connection.promise().query(sql, [email]);
 };
 
 const updateOneUser = (user, id) => {
-  const sql = 'UPDATE user SET ? WHERE id=?';
+  const sql = "UPDATE user SET ? WHERE id=?";
   return connection.promise().query(sql, [user, id]);
 };
 
 const deleteOneUser = (id) => {
-  const sql = 'DELETE FROM user WHERE id=?';
+  const sql = "DELETE FROM user WHERE id=?";
   return connection.promise().query(sql, [id]);
 };
 
