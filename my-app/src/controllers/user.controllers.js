@@ -39,20 +39,19 @@ const getClients = async (req, res) => {
 };
 
 const createOneClient = async (req, res, next) => {
-  const { firstname, lastname, email, password, phone, adress, role } =
+  const { pseudo, email, clearPassword } =
     req.body;
   const [data, error] = await awesomeDataHandler(existEmailUser(email));
   if (data[0][0]) {
-    res.status(500).send("This user already exist");
+    res.status(500).send("This user already exists");
   } else {
     let validationData = null;
     validationData = Joi.object({
-      firstname: Joi.string().alphanum().required(),
-      lastname: Joi.string().alphanum().required(),
+      pseudo: Joi.string().alphanum(),
       email: Joi.string()
         .email({ minDomainSegments: 2, tlds: { alow: ["com", "fr", "net"] } })
         .required(),
-      password: Joi.string()
+      clearPassword: Joi.string()
         .pattern(
           new RegExp(
             "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[.;!@#$%^&*])(?=.{8,})"
@@ -61,25 +60,18 @@ const createOneClient = async (req, res, next) => {
         .min(8)
         .max(32)
         .required(),
-      phone: Joi.string().max(10).required(),
-      adress: Joi.string().required(),
-      role: Joi.boolean().truthy("admin").falsy("user"),
     }).validate(
-      { firstname, lastname, email, password, phone, adress, role },
+      { pseudo, email, clearPassword },
       { abortEarly: false }
     ).error;
     if (validationData) {
       res.status(500).send(`${[validationData]} Invalid data`);
     } else {
-      const hashedPassword = await hashPassword(password);
+      const password = await hashPassword(clearPassword);
       const user = {
-        firstname,
-        lastname,
+        pseudo,
         email,
-        hashedPassword,
-        phone,
-        adress,
-        role,
+        password,
       };
       const [data1, error1] = await awesomeDataHandler(createOneUser(user));
       if (!error) {
@@ -124,7 +116,7 @@ const createOneClient = async (req, res, next) => {
     });
   };
   
-  const verifyCredentials = async (req, res, next) => {
+  const verifyCredentials = async (req, res) => {
     const { email, password } = req.body;
     try {
       const [users] = await existEmailUser(email);
@@ -132,10 +124,10 @@ const createOneClient = async (req, res, next) => {
         return res.status(404).send('User not found');
       }
       const [user] = users;
-      const passwordIsValid = await verifyPassword(user.password, password);
+      const passwordIsValid = await verifyPassword(password, user.password);
       if (passwordIsValid) {
         req.email = user.email;
-        return next();
+        return res.send("you're login");
       }
       return res.status(401).send('Your email or your password is wrong');
     } catch (err) {
