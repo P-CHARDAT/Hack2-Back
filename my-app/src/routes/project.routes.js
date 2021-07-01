@@ -11,7 +11,7 @@ const {
 
 projectRoutes.get("/", getProjects);
 projectRoutes.get("/infos/", getProjectInfos);
-projectRoutes.get("/infos/:id", getProjectInfosById);
+projectRoutes.get("/infosid/:id", getProjectInfosById);
 projectRoutes.get("/:id", getProjects);
 projectRoutes.post("/", createAssestProject, getProjects);
 
